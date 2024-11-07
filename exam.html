@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Online Examination</title>
+    <link
+      rel="icon"
+      href="./assets/favicon_io/favicon.ico"
+      type="image/x-icon"
+    />
+    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="css/exam.css" />
+  </head>
+  <body>
+    <div class="exam-page">
+      <header class="exam-header">
+        <h1>Online Examination</h1>
+        <div id="user-info">
+          <span id="student-name">Name: Unknown</span>
+          <span id="student-id">ID: Unknown</span>
+        </div>
+        <div class="progress-bar">
+          <progress id="exam-progress" value="0" max="100"></progress>
+          <span id="progress-text">0% Completed</span>
+        </div>
+        <div id="timer">10:00</div>
+      </header>
+
+      <div class="exam-body">
+        <nav class="sidebar">
+          <h3>Flagged Questions</h3>
+          <ul id="flagged-questions"></ul>
+        </nav>
+
+        <main class="exam-container">
+          <div class="question-section">
+            <div id="question-container" class="question-box"></div>
+            <div id="answers-container" class="answers-box"></div>
+          </div>
+
+          <div class="controls">
+            <button id="prev-btn" class="control-btn">
+              <i class="fas fa-chevron-left"></i> Previous
+            </button>
+            <button id="flag-btn" class="control-btn">
+              <i class="fas fa-flag"></i> Flag
+            </button>
+            <button id="next-btn" class="control-btn">
+              Next <i class="fas fa-chevron-right"></i>
+            </button>
+            <button id="submit-btn" class="control-btn">
+              <i class="bi bi-check-circle"></i> Submit
+            </button>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script>
+      // Questions and answer options
+      const questions = [
+        {
+          question: "Which one of the following is NOT a sub-company of the Volkswagen Group?",
+          options: ["Opel", "Porsche", "Bugatti", "Bentley"],
+          correctAnswer: "Opel"
+        },
+        {
+          question: "According to Fair Works Australia, how long do you have to work to get Long Service Leave?",
+          options: ["2 years", "8 years", "7 years", "6 months"],
+          correctAnswer: "8 years"
+        },
+        {
+          question: "In 2012, which movie won every category in the 32nd Golden Raspberry Awards?",
+          options: ["Jack and Jill", "The Girl with the Dragon Tattoo", "Thor", "The King's Speech"],
+          correctAnswer: "Jack and Jill"
+        },
+        {
+          question: "Which of the following British Monarchs never appeared on a circulated pound sterling coin?",
+          options: ["Victoria", "Edward VIII", "George VI", "Charles II"],
+          correctAnswer: "Edward VIII"
+        },
+        {
+          question: "The prefix Sino- (As in Sino-American) is used to refer to what nationality?",
+          options: ["Chinese", "Japanese", "Russian", "Indian"],
+          correctAnswer: "Chinese"
+        }
+      ];
+
+      let currentQuestionIndex = 0;
+
+      // Load a specific question
+      function loadQuestion(index) {
+        const questionData = questions[index];
+        
+        // Update the question
+        const questionContainer = document.getElementById("question-container");
+        questionContainer.innerHTML = `<h2>Question ${index + 1}</h2><p>${questionData.question}</p>`;
+
+        // Update the answers
+        const answersContainer = document.getElementById("answers-container");
+        answersContainer.innerHTML = "";
+        questionData.options.forEach((option) => {
+          const optionElement = document.createElement("label");
+          optionElement.innerHTML = `<input type="radio" name="q${index}" value="${option}"> ${option}`;
+          answersContainer.appendChild(optionElement);
+          answersContainer.appendChild(document.createElement("br"));
+        });
+      }
+
+      // Load the first question on page load
+      loadQuestion(currentQuestionIndex);
+
+      // Handle "Next" and "Previous" button functionality
+      document.getElementById('next-btn').addEventListener('click', function() {
+        if (currentQuestionIndex < questions.length - 1) {
+          currentQuestionIndex++;
+          loadQuestion(currentQuestionIndex);
+        }
+      });
+
+      document.getElementById('prev-btn').addEventListener('click', function() {
+        if (currentQuestionIndex > 0) {
+          currentQuestionIndex--;
+          loadQuestion(currentQuestionIndex);
+        }
+      });
+
+      // Handle the "Flag" button (adds current question to flagged list)
+      document.getElementById('flag-btn').addEventListener('click', function() {
+        const flaggedList = document.getElementById("flagged-questions");
+        const li = document.createElement("li");
+        li.innerText = `Question ${currentQuestionIndex + 1}`;
+        flaggedList.appendChild(li);
+      });
+
+      // Handle the "Submit" button (simple alert for now)
+      document.getElementById('submit-btn').addEventListener('click', function() {
+        alert("Exam submitted!");
+      });
+
+      // Progress Bar Update (based on question number)
+      function updateProgress() {
+        const progress = (currentQuestionIndex + 1) / questions.length * 100;
+        document.getElementById("exam-progress").value = progress;
+        document.getElementById("progress-text").innerText = `${Math.round(progress)}% Completed`;
+      }
+
+      // Update progress whenever the question is changed
+      document.querySelectorAll('.control-btn').forEach(button => {
+        button.addEventListener('click', updateProgress);
+      });
+    </script>
+
+    <!-- External JS files if needed -->
+    <script src="js/goBackButtonDisable.js"></script>
+    <script src="js/exam.js"></script>
+  </body>
+</html>
