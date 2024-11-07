@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: online-exam-sys-deployment
+  labels:
+    app: online-exam-sys
+spec:
+  replicas: 2  # Number of pods to run
+  selector:
+    matchLabels:
+      app: online-exam-sys
+  template:
+    metadata:
+      labels:
+        app: online-exam-sys
+    spec:
+      containers:
+      - name: online-exam-sys
+        image: rohitrocks/online-exam-sys:latest  # Use your image name here
+        ports:
+        - containerPort: 80  # Nginx serves on port 80
+
